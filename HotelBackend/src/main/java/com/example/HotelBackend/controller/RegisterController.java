@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200") // Angular URL
+@CrossOrigin(origins = "*") // Angular URL
 @RequestMapping("/api")
 public class RegisterController {
 
