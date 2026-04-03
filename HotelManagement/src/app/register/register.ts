@@ -25,7 +25,7 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      fetch('http://54.163.61.51:8087/api/register', {
+      fetch('http://54.167.72.81:8087/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(this.registerForm.value)
@@ -37,7 +37,7 @@ export class RegisterComponent {
 
   // ✅ ADD THIS METHOD
   loadUsers() {
-    this.http.get<any[]>('http://54.163.61.51:8087/api/users')
+    this.http.get<any[]>('http://54.167.72.81:8087/api/users')
       .subscribe(data => {
         this.users = data;
         console.log(this.users);
