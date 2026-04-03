@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI-CD Pipeline
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,9 +28,9 @@ jobs:
       run: |
         cd HotelBackend
         chmod +x mvnw
-        ./mvnw clean install
+        ./mvnw clean package
 
-    # 🟢 Setup Node 20 (FIXED)
+    # 🟢 Setup Node.js (Angular needs Node 20)
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
@@ -47,3 +47,17 @@ jobs:
       run: |
         cd HotelManagement
         npm run build
+
+    # 🚀 Deploy to EC2 (Spring Boot)
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          cd /home/ec2-user/SmartHotel/HotelBackend
+          chmod +x mvnw
+          ./mvnw clean package
+          pkill -f HotelBackend || true
+          nohup java -jar target/*.jar > app.log 2>&1 &
